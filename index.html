@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CLUBFINDER Miami — Private Club Discovery</title>
+    <meta name="description" content="Interactive discovery demo for four private clubs in Miami Beach." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <div class="brand">
+        <span class="brand__name">CLUBFINDER</span>
+        <span class="brand__sub">Miami</span>
+      </div>
+
+      <nav class="nav">
+        <button class="nav__link is-active" data-view="discover">Discover</button>
+        <button class="nav__link" data-view="discover">Clubs</button>
+        <button class="nav__link" data-view="profile">Profile</button>
+      </nav>
+
+      <div class="header__spacer"></div>
+
+      <div class="search">
+        <span class="search__icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <circle cx="11" cy="11" r="7" /><path d="m20 20-3.2-3.2" />
+          </svg>
+        </span>
+        <input id="search-input" class="search__input" type="text" placeholder="Search clubs" autocomplete="off" />
+        <div id="search-results" class="search__results"></div>
+      </div>
+
+      <button class="icon-btn notif-btn" aria-label="Notifications">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round">
+          <path d="M18 8a6 6 0 1 0-12 0c0 6-2 7-2 7h16s-2-1-2-7" /><path d="M13.7 20a2 2 0 0 1-3.4 0" />
+        </svg>
+        <span class="icon-btn__dot"></span>
+      </button>
+
+      <button id="avatar-btn" class="avatar-btn" aria-label="Profile menu">AR</button>
+
+      <div id="user-menu" class="user-menu">
+        <div class="user-menu__head">
+          <strong>Alessandra Rivera</strong>
+          <span>alessandra.rivera@demo.com</span>
+        </div>
+        <button class="user-menu__item" data-view="profile">View profile</button>
+        <button class="user-menu__item" data-view="settings">Settings</button>
+        <button class="user-menu__item" data-view="discover">Back to discover</button>
+      </div>
+    </header>
+
+    <!-- DISCOVER -->
+    <main id="view-discover" class="view is-active">
+      <div class="discover">
+        <section class="map-pane">
+          <div class="map-badge">Miami Beach · 4 Clubs</div>
+          <div id="map"></div>
+          <div class="map-controls">
+            <button class="map-btn" id="zoom-in" aria-label="Zoom in">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+            </button>
+            <button class="map-btn" id="zoom-out" aria-label="Zoom out">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"/></svg>
+            </button>
+            <button class="map-btn" id="recenter" aria-label="Recenter map">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="7"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+            </button>
+          </div>
+        </section>
+
+        <aside class="clubs-pane">
+          <h1 class="pane-title">Featured Clubs</h1>
+          <p class="pane-sub">Four private clubs along the Miami Beach coastline.</p>
+          <div id="club-list" class="club-list"></div>
+          <p class="pane-hint">Hover a club on desktop — or tap on mobile — to move the map.</p>
+        </aside>
+      </div>
+    </main>
+
+    <!-- PROFILE -->
+    <main id="view-profile" class="view">
+      <div class="page">
+        <div class="page__inner">
+          <h1 class="page__title">Profile</h1>
+          <p class="page__sub">Demo account — all information below is placeholder content.</p>
+
+          <div class="card">
+            <div class="profile-head">
+              <div class="profile-avatar">AR</div>
+              <div>
+                <p class="profile-head__name">Alessandra Rivera</p>
+                <p class="profile-head__mail">alessandra.rivera@demo.com</p>
+              </div>
+              <button class="btn btn--primary btn--right" data-toast="Edit Profile is demo-only.">Edit Profile</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2 class="card__title">Personal Information</h2>
+            <div class="info-grid">
+              <div><span class="field__label">Full name</span><div class="field__value">Alessandra Rivera</div></div>
+              <div><span class="field__label">Email</span><div class="field__value">alessandra.rivera@demo.com</div></div>
+              <div><span class="field__label">Phone number</span><div class="field__value">+1 (305) 555 0142</div></div>
+              <div><span class="field__label">Location</span><div class="field__value">Miami Beach, Florida</div></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2 class="card__title">Account</h2>
+            <div class="list-row">
+              <div><div class="list-row__title">Account status</div><div class="list-row__desc">Demo account</div></div>
+              <button class="btn btn--ghost" data-toast="Demo account — no changes saved.">Manage</button>
+            </div>
+            <div class="list-row">
+              <div><div class="list-row__title">Connected email</div><div class="list-row__desc">alessandra.rivera@demo.com</div></div>
+              <button class="btn btn--ghost" data-toast="Demo account — no changes saved.">Change</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2 class="card__title">Preferences</h2>
+            <div class="list-row">
+              <div><div class="list-row__title">Beachfront clubs</div><div class="list-row__desc">Prioritise oceanfront locations</div></div>
+              <button class="switch is-on" data-switch aria-label="Toggle"></button>
+            </div>
+            <div class="list-row">
+              <div><div class="list-row__title">Map auto-follow</div><div class="list-row__desc">Move the map when browsing clubs</div></div>
+              <button class="switch is-on" data-switch aria-label="Toggle"></button>
+            </div>
+            <div class="list-row">
+              <div><div class="list-row__title">Concierge suggestions</div><div class="list-row__desc">Let the AI concierge suggest clubs</div></div>
+              <button class="switch" data-switch aria-label="Toggle"></button>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2 class="card__title">Settings</h2>
+            <div class="list-row">
+              <div><div class="list-row__title">All settings</div><div class="list-row__desc">Notifications, privacy, appearance, security</div></div>
+              <button class="btn btn--primary" data-view="settings">Open settings</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- SETTINGS -->
+    <main id="view-settings" class="view">
+      <div class="page">
+        <div class="page__inner">
+          <h1 class="page__title">Settings</h1>
+          <p class="page__sub">Frontend-only controls for this demo.</p>
+
+          <div class="tabs">
+            <button class="tab is-active" data-tab="account">Account</button>
+            <button class="tab" data-tab="notifications">Notifications</button>
+            <button class="tab" data-tab="privacy">Privacy</button>
+            <button class="tab" data-tab="appearance">Appearance</button>
+            <button class="tab" data-tab="security">Password &amp; Security</button>
+          </div>
+
+          <div class="tab-panel is-active" data-panel="account">
+            <div class="card">
+              <h2 class="card__title">Account</h2>
+              <div class="info-grid">
+                <div class="field"><label class="field__label" for="s-name">Display name</label><input id="s-name" value="Alessandra Rivera" /></div>
+                <div class="field"><label class="field__label" for="s-email">Email</label><input id="s-email" value="alessandra.rivera@demo.com" /></div>
+                <div class="field"><label class="field__label" for="s-phone">Phone</label><input id="s-phone" value="+1 (305) 555 0142" /></div>
+                <div class="field"><label class="field__label" for="s-city">Location</label><input id="s-city" value="Miami Beach, Florida" /></div>
+              </div>
+              <div style="margin-top: 22px">
+                <button class="btn btn--primary" data-toast="Settings saved (demo only).">Save changes</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-panel" data-panel="notifications">
+            <div class="card">
+              <h2 class="card__title">Notifications</h2>
+              <div class="list-row">
+                <div><div class="list-row__title">Email updates</div><div class="list-row__desc">Club availability and invitations</div></div>
+                <button class="switch is-on" data-switch aria-label="Toggle"></button>
+              </div>
+              <div class="list-row">
+                <div><div class="list-row__title">Push notifications</div><div class="list-row__desc">Alerts on this device</div></div>
+                <button class="switch" data-switch aria-label="Toggle"></button>
+              </div>
+              <div class="list-row">
+                <div><div class="list-row__title">Concierge messages</div><div class="list-row__desc">Replies from your AI concierge</div></div>
+                <button class="switch is-on" data-switch aria-label="Toggle"></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-panel" data-panel="privacy">
+            <div class="card">
+              <h2 class="card__title">Privacy</h2>
+              <div class="list-row">
+                <div><div class="list-row__title">Private profile</div><div class="list-row__desc">Hide your profile from other members</div></div>
+                <button class="switch is-on" data-switch aria-label="Toggle"></button>
+              </div>
+              <div class="list-row">
+                <div><div class="list-row__title">Share location</div><div class="list-row__desc">Use location to sort nearby clubs</div></div>
+                <button class="switch" data-switch aria-label="Toggle"></button>
+              </div>
+              <div class="list-row">
+                <div><div class="list-row__title">Activity history</div><div class="list-row__desc">Store recently viewed clubs</div></div>
+                <button class="switch is-on" data-switch aria-label="Toggle"></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-panel" data-panel="appearance">
+            <div class="card">
+              <h2 class="card__title">Appearance</h2>
+              <div class="info-grid">
+                <div class="field">
+                  <label class="field__label" for="s-theme">Theme</label>
+                  <select id="s-theme"><option>Light</option><option>System</option></select>
+                </div>
+                <div class="field">
+                  <label class="field__label" for="s-density">Card density</label>
+                  <select id="s-density"><option>Comfortable</option><option>Compact</option></select>
+                </div>
+              </div>
+              <div class="list-row" style="margin-top: 20px">
+                <div><div class="list-row__title">Reduced motion</div><div class="list-row__desc">Minimise map and panel animation</div></div>
+                <button class="switch" data-switch aria-label="Toggle"></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-panel" data-panel="security">
+            <div class="card">
+              <h2 class="card__title">Password &amp; Security</h2>
+              <div class="info-grid">
+                <div class="field"><label class="field__label" for="s-current">Current password</label><input id="s-current" type="password" value="demo1234" /></div>
+                <div class="field"><label class="field__label" for="s-new">New password</label><input id="s-new" type="password" placeholder="••••••••" /></div>
+              </div>
+              <div class="list-row" style="margin-top: 20px">
+                <div><div class="list-row__title">Two-factor authentication</div><div class="list-row__desc">Require a code at sign-in</div></div>
+                <button class="switch is-on" data-switch aria-label="Toggle"></button>
+              </div>
+              <div style="margin-top: 22px">
+                <button class="btn btn--primary" data-toast="Password updated (demo only).">Update password</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- AI CONCIERGE -->
+    <div id="concierge" class="concierge">
+      <button id="concierge-open" class="concierge__fab">
+        <img src="images/concierge.png" alt="AI concierge" />
+        <span class="concierge__fab-label">AI Concierge</span>
+      </button>
+
+      <div class="concierge__panel" role="dialog" aria-label="AI Concierge">
+        <div class="concierge__head">
+          <img src="images/concierge.png" alt="" />
+          <div>
+            <div class="concierge__title">AI Concierge</div>
+            <div class="concierge__subtitle">Your personal club assistant</div>
+          </div>
+          <button id="concierge-close" class="concierge__close" aria-label="Close">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+          </button>
+        </div>
+
+        <div id="chat-log" class="concierge__log"></div>
+
+        <div class="concierge__actions">
+          <button class="quick" data-club="surf">Take me to The Surf Club</button>
+          <button class="quick" data-club="fisher">Show Fisher Island Club</button>
+          <button class="quick" data-club="all">Show clubs near Miami Beach</button>
+        </div>
+
+        <form id="chat-form" class="concierge__form">
+          <input id="chat-input" class="concierge__input" type="text" placeholder="Ask the concierge…" autocomplete="off" />
+          <button class="concierge__send" type="submit" aria-label="Send">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <nav class="mobile-nav">
+      <div class="mobile-nav__inner">
+        <button class="mobile-nav__btn is-active" data-view="discover">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="m15 9-2 5-5 2 2-5 5-2z"/></svg>
+          Discover
+        </button>
+        <button class="mobile-nav__btn" data-view="profile">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-3.3 3.6-6 8-6s8 2.7 8 6"/></svg>
+          Profile
+        </button>
+        <button class="mobile-nav__btn" data-view="settings">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.1V21a2 2 0 1 1-4 0v-.1A1.6 1.6 0 0 0 7.5 19.4l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A1.6 1.6 0 0 0 3 14a2 2 0 1 1 0-4 1.6 1.6 0 0 0 1.7-2.5l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1A1.6 1.6 0 0 0 10 3a2 2 0 1 1 4 0 1.6 1.6 0 0 0 2.5 1.7l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1A1.6 1.6 0 0 0 21 10a2 2 0 1 1 0 4 1.6 1.6 0 0 0-1.6 1z"/></svg>
+          Settings
+        </button>
+      </div>
+    </nav>
+
+    <div id="toast" class="toast"></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
